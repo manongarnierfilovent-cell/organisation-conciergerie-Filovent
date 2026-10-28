@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Filovent — Organisation Conciergerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f7fb;--surface:#ffffff;--surface-2:#f3f6fa;--soft:#eef2f7;--ink:#1c2938;--ink-strong:#25394e;--ink-2:#586d82;--ink-3:#6b7c90;
+  --line:#e0e7ef;--line-2:#e7edf4;--navy:#183b5c;--navy-ink:#ffffff;--accent:#6c9fc8;--tile-hover:#f8fbff;--pill:#eff5fb;--pill-ink:#315a80;--hintbar:#b3c8da;
+  color-scheme:light;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1824;--surface:#152331;--surface-2:#1b2b3c;--soft:#1b2b3c;--ink:#e6edf4;--ink-strong:#f1f5f9;--ink-2:#aebfd0;--ink-3:#8fa2b5;
+  --line:#26394c;--line-2:#22344a;--navy:#cfe0f0;--navy-ink:#0e1824;--accent:#6c9fc8;--tile-hover:#1b2b3c;--pill:#1f344a;--pill-ink:#a9c8e6;--hintbar:#3d5874;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1824;--surface:#152331;--surface-2:#1b2b3c;--soft:#1b2b3c;--ink:#e6edf4;--ink-strong:#f1f5f9;--ink-2:#aebfd0;--ink-3:#8fa2b5;
+  --line:#26394c;--line-2:#22344a;--navy:#cfe0f0;--navy-ink:#0e1824;--accent:#6c9fc8;--tile-hover:#1b2b3c;--pill:#1f344a;--pill-ink:#a9c8e6;--hintbar:#3d5874;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg)}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{max-width:1240px;margin:auto;padding:26px 22px 65px}
+header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:800;color:#53718f}
+h1{font-size:29px;letter-spacing:-.04em;margin:6px 0}
+h2{font-size:20px;letter-spacing:-.03em;margin:0 0 15px}
+h3{font-size:16px;margin:0 0 9px}
+p{line-height:1.55}
+.muted{color:var(--ink-3)}.small{font-size:12px}
+.topnote{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 16px;color:var(--ink-3);font-size:12px}
+.nav{display:flex;gap:7px;overflow-x:auto;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:24px}
+.nav button{white-space:nowrap;border:0;background:transparent;color:var(--ink-3);padding:11px 14px;border-radius:9px;cursor:pointer;font-weight:650}
+.nav button.active{background:var(--navy);color:var(--navy-ink)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:23px;box-shadow:0 5px 25px rgba(32,55,85,.035);margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tile{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surface);cursor:pointer;text-align:left;color:inherit}
+.tile:hover,.tile:focus-visible{border-color:var(--accent);background:var(--tile-hover)}
+.tile strong{display:block;margin-bottom:5px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:3px;flex:none}
+.barrow{margin:13px 0;cursor:pointer}
+.barrow .name{font-weight:650;font-size:13px;margin-bottom:6px}
+.bar{display:flex;width:100%;height:27px;border-radius:6px;overflow:hidden;background:var(--soft)}
+.barseg{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:750;border-right:1px solid #fff5}
+.barseg:hover{filter:brightness(.92)}
+.section{display:none}.section.active{display:block}
+select,input{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:11px 12px;font:inherit;width:100%;color:var(--ink)}
+label{font-size:12px;color:var(--ink-3);font-weight:700;display:block;margin-bottom:7px}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-bottom:18px}
+.switch{display:inline-flex;background:var(--soft);padding:4px;border-radius:10px;gap:4px}
+.switch button{border:0;border-radius:8px;padding:9px 14px;background:transparent;cursor:pointer;color:var(--ink-3);font-weight:700}
+.switch button.active{background:var(--surface);color:var(--navy);box-shadow:0 2px 6px #0001}
+.donut{width:min(100%,260px);aspect-ratio:1;border-radius:50%;position:relative;margin:auto}
+.donut::after{content:'100%';position:absolute;inset:27%;background:var(--surface);border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:800;color:var(--ink-strong)}
+.donutlegend{display:grid;gap:11px;align-content:center}
+.donutlegend>div{display:flex;align-items:center;gap:10px}
+.donutlegend strong{margin-left:auto}
+.profilechart{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center}
+.list{display:grid;gap:8px}
+.mission{border:1px solid var(--line);border-radius:10px;padding:13px 14px;background:var(--surface)}
+.mission summary{cursor:pointer;font-weight:600;font-size:14px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.mission summary::-webkit-details-marker{display:none}
+.mission summary::after{content:'+';font-size:18px;color:var(--ink-3)}
+.mission[open] summary::after{content:'−'}
+.mission .detail{padding-top:10px;color:var(--ink-2);font-size:13px;line-height:1.7}
+.mission .detail b{color:var(--ink-strong)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--ink-3);background:var(--surface-2);font-size:11px;letter-spacing:.03em}
+td,th{padding:12px;border-bottom:1px solid var(--line-2);vertical-align:top}
+tbody tr:hover td{background:var(--tile-hover)}
+.tag{font-size:11px;padding:4px 7px;border-radius:6px;background:var(--pill);color:var(--pill-ink);white-space:nowrap}
+.empty{padding:22px;color:var(--ink-3);background:var(--surface-2);border-radius:10px}
+.hint{font-size:12px;color:var(--ink-3);border-left:3px solid var(--hintbar);padding-left:12px;margin-top:14px}
+.metrics{display:flex;gap:12px;flex-wrap:wrap}
+.metric{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px;min-width:140px}
+.metric strong{display:block;font-size:25px}
+.metric span{font-size:12px;color:var(--ink-3)}
+.definition{padding:13px 0;border-bottom:1px solid var(--line-2)}
+.definition:last-of-type{border:0}
+footer{font-size:12px;color:var(--ink-3);margin-top:24px}
+/* Vue matrice */
+.viewbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.key{display:flex;gap:18px;font-size:12px;color:var(--ink-2);flex-wrap:wrap}
+.key span{display:inline-flex;gap:7px;align-items:center}
+.cell{display:inline-block;width:13px;height:13px;border-radius:50%}
+.cell.q{background:var(--navy)}
+.cell.r{border:2px solid var(--navy)}
+.matrix th,.matrix td{text-align:center;vertical-align:middle;padding:9px 6px}
+.matrix .m{text-align:left;position:sticky;left:0;background:var(--surface);min-width:260px;z-index:1}
+.matrix thead .m{background:var(--surface-2)}
+.matrix th.p{cursor:pointer;min-width:84px}
+.matrix tr.fam td{background:var(--surface-2);font-weight:700;font-size:12px;color:var(--ink-2);text-align:left}
+.matrix tfoot td{font-weight:700;background:var(--surface-2)}
+.matrix .hl{background:var(--pill)}
+
+/* Passation */
+:root{--manon-bg:#FAECE7;--manon-ink:#712B13;--new-bg:#E1F5EE;--new-ink:#085041;--alert-bg:#FCEBEB;--alert-ink:#A32D2D;--band:#f8fafc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--manon-bg:#4A1B0C;--manon-ink:#F5C4B3;--new-bg:#04342C;--new-ink:#9FE1CB;--alert-bg:#501313;--alert-ink:#F7C1C1;--band:#18283a}}
+:root[data-theme="dark"]{--manon-bg:#4A1B0C;--manon-ink:#F5C4B3;--new-bg:#04342C;--new-ink:#9FE1CB;--alert-bg:#501313;--alert-ink:#F7C1C1;--band:#18283a}
+
+.moments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.moment{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--surface)}
+.moment.trans{background:var(--band)}
+.moment h3{font-size:18px;margin:0}
+.moment .msub{font-size:12px;color:var(--ink-3);margin-bottom:16px}
+.act{margin-bottom:16px}
+.phead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}
+.readbox{max-width:300px;font-size:12px;line-height:1.5;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.readbox b{display:block;font-size:12px;color:var(--ink);margin-bottom:2px}
+.readbox .info{cursor:default;width:15px;height:15px;font-size:10px;margin:0 1px}
+@media(max-width:750px){.phead{flex-direction:column}.readbox{max-width:none}}
+.act .an{font-size:13px;font-weight:650;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.apv{margin-left:auto;font-size:11.5px;font-weight:500;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:8px}
+.sbar{display:flex;width:100%;height:34px;border-radius:7px;overflow:hidden;cursor:pointer;border:0;padding:0;background:var(--soft)}
+.sbar:hover{filter:brightness(.96)}
+.sbar span{display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;border-right:2px solid var(--surface);min-width:0}
+.sbar span:last-child{border-right:0}
+.names{display:flex;flex-wrap:wrap;gap:3px 10px;font-size:11.5px;color:var(--ink-2);margin-top:5px}.names i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
+.info{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;border:1.5px solid var(--ink-3);background:transparent;color:var(--ink-2);font:italic 700 11px Georgia,serif;cursor:pointer;margin-left:4px;padding:0;vertical-align:1px}
+.info:hover{border-color:var(--navy);color:var(--navy)}
+.mtable{font-size:12.5px}
+.mtable th{font-size:11px}
+.mtable td{padding:7px 8px;vertical-align:top}
+.mtable td:first-child{font-weight:600;color:var(--ink)}
+.mtable tr.grp td{background:var(--surface-2);font-size:11px;font-weight:800;letter-spacing:.06em;color:#53718f;text-transform:uppercase;padding:6px 8px}
+.who{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:20px;border-radius:5px;font-size:10.5px;font-weight:800;margin:0 3px 3px 0;padding:0 4px}
+.mtable td:nth-child(2),.mtable td:nth-child(3){white-space:nowrap;width:1%}
+.mgroup{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.mgh{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.mgh b{font-size:15px}
+.mgp{margin:10px 0 4px}
+.mgroup details summary{cursor:pointer;font-size:12.5px;color:var(--ink-3);margin-top:6px}
+.mgroup details .tablewrap{margin-top:8px}
+.pv{display:grid;gap:6px}
+.pv div{display:grid;grid-template-columns:1fr auto;gap:0 10px;padding:9px 12px;border-radius:9px;background:var(--surface-2)}
+.pv b{font-size:13.5px}
+.pv span{grid-column:1;font-size:12px;color:var(--ink-3)}
+.pv em{grid-column:2;grid-row:1/3;align-self:center;font-style:normal;font-size:12px;color:var(--ink-3)}
+.awarn{font-size:11.5px;color:var(--alert-ink);margin-top:4px}
+.keyrow i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+@media(max-width:900px){.moments{grid-template-columns:1fr}}
+.alerts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.alertcard{border:1px solid var(--line);border-left:4px solid var(--alert-ink);border-radius:0 12px 12px 0;background:var(--surface);padding:13px 15px;text-align:left;cursor:pointer;color:var(--ink)}
+.alertcard:hover{background:var(--tile-hover)}
+.alertcard strong{display:block;font-size:14px;margin-bottom:3px}
+.alertcard span{font-size:12.5px;color:var(--ink-2)}
+.pgrid{display:grid;grid-template-columns:150px repeat(3,minmax(0,1fr));gap:8px}
+.pgrid .colh{font-weight:750;font-size:14px;padding:6px 4px 2px}
+.pgrid .colh small{display:block;font-weight:500;font-size:11.5px;color:var(--ink-3)}
+.pgrid .blockh{grid-column:1/-1;font-size:11px;letter-spacing:.12em;font-weight:800;color:#53718f;padding:14px 0 2px;border-top:1px solid var(--line-2)}
+.pgrid .blockh:first-of-type{border-top:0}
+.pgrid .pole{font-weight:700;font-size:14px;padding-top:10px}
+.pgrid .pole small{display:block;font-weight:500;font-size:11.5px;color:var(--ink-3)}
+.pcell{border:1px solid var(--line);border-radius:11px;background:var(--surface);padding:8px;display:flex;flex-direction:column;gap:4px;cursor:pointer;text-align:left;color:var(--ink);min-height:62px}
+.pcell:hover{border-color:var(--accent)}
+.pcell.trans{background:var(--band)}
+.chip{display:flex;justify-content:space-between;gap:6px;padding:3px 8px;border-radius:7px;background:var(--soft);font-size:12.5px}
+.chip b{font-weight:700}
+.chip.manon{background:var(--manon-bg);color:var(--manon-ink)}
+.chip.recrue{background:var(--new-bg);color:var(--new-ink)}
+.chip.zero{background:var(--alert-bg);color:var(--alert-ink)}
+.chip.dim{opacity:.28}
+.chip.lit{outline:2px solid var(--accent)}
+.more{font-size:11.5px;color:var(--ink-3);padding:0 8px}
+.keyrow{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);margin-top:14px;align-items:center}
+.keyrow .chip{display:inline-flex}
+.flow{display:grid;gap:8px}
+.flowrow{display:grid;grid-template-columns:170px 70px 30px 1fr;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--surface);text-align:left;color:var(--ink)}
+.flowrow:hover{border-color:var(--accent)}
+.flowbar{height:8px;border-radius:4px;background:var(--manon-ink);opacity:.75}
+.arrow{color:var(--ink-3);text-align:center}
+.recv{display:flex;gap:6px;flex-wrap:wrap}
+.recv .chip{display:inline-flex}
+.todo{border:1px dashed var(--hintbar);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--ink-2);margin-top:12px}
+.drawer-bg{position:fixed;inset:0;background:rgba(10,20,35,.35);z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(580px,100%);background:var(--surface);z-index:21;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 20px) 22px calc(env(safe-area-inset-bottom,0px) + 30px);border-left:1px solid var(--line);box-shadow:-10px 0 30px rgba(0,0,0,.12)}
+.drawer .close{position:sticky;top:0;float:right;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;cursor:pointer;color:var(--ink)}
+.drawer h2{margin:0 0 4px}
+.drawer h3{margin:20px 0 8px;font-size:14px}
+.dtable{width:100%;font-size:13px;border-collapse:collapse}
+.dtable td,.dtable th{padding:7px 6px;border-bottom:1px solid var(--line-2)}
+.dtable th{background:transparent;text-align:left}
+.dtable td:last-child,.dtable th:last-child{text-align:right}
+.minibar{display:flex;height:16px;border-radius:4px;overflow:hidden;background:var(--soft)}
+.minibar span{height:100%}
+@media(max-width:860px){.alerts{grid-template-columns:1fr}.pgrid{grid-template-columns:96px repeat(3,minmax(0,1fr))}.flowrow{grid-template-columns:1fr auto}.flowrow .flowbar,.flowrow .arrow{display:none}.flowrow .recv{grid-column:1/-1}}
+@media(max-width:560px){.pgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.pgrid .pole{grid-column:1/-1}.pgrid .colh:first-child{display:none}.chip{font-size:11.5px;padding:3px 5px}}
+@media(max-width:750px){.app{padding:18px 12px}.grid,.twocol,.profilechart{grid-template-columns:1fr}.filters{grid-template-columns:1fr}h1{font-size:24px}.panel{padding:16px}header{align-items:flex-start;flex-direction:column}}
+@media print{.nav,.switch{display:none}.panel{box-shadow:none;break-inside:avoid}.barseg,.dot,.donut,.cell{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+<style>
+header{display:block}
+.navsolo{margin-left:14px}
+.nav .navsolo{border-left:0}
+.subsection{display:none}.subsection.active{display:block}
+.subnav{display:flex;flex-wrap:wrap;gap:4px;background:var(--soft);padding:4px;border-radius:11px;margin-bottom:16px;width:fit-content;max-width:100%}
+.subnav button{border:0;border-radius:8px;padding:9px 14px;background:transparent;cursor:pointer;color:var(--ink-3);font-weight:700;font-size:13.5px}
+.subnav button.active{background:var(--surface);color:var(--navy);box-shadow:0 2px 6px #0001}
+.nav{flex-wrap:wrap;row-gap:12px;overflow:visible}
+.nav button{padding:10px 13px}
+
+:root{
+  --bg:#f5f7fb;--surface:#fff;--surface-2:#f3f6fa;--soft:#eef2f7;--ink:#1c2938;--ink-2:#586d82;--ink-3:#6b7c90;
+  --line:#e0e7ef;--line-2:#e7edf4;--navy:#183b5c;--navy-ink:#fff;--accent:#6c9fc8;--band:#f8fafc;--red:#c0392b;
+  color-scheme:light;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1824;--surface:#152331;--surface-2:#1b2b3c;--soft:#1b2b3c;--ink:#e6edf4;--ink-2:#aebfd0;--ink-3:#8fa2b5;--line:#26394c;--line-2:#22344a;--navy:#cfe0f0;--navy-ink:#0e1824;--band:#18283a;--red:#f28b82;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1824;--surface:#152331;--surface-2:#1b2b3c;--soft:#1b2b3c;--ink:#e6edf4;--ink-2:#aebfd0;--ink-3:#8fa2b5;--line:#26394c;--line-2:#22344a;--navy:#cfe0f0;--navy-ink:#0e1824;--band:#18283a;--red:#f28b82;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{max-width:1240px;margin:auto;padding:26px 22px 60px}
+header{margin-bottom:22px}
+.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:800;color:#53718f}
+h1{font-size:29px;letter-spacing:-.04em;margin:6px 0}
+h2{font-size:20px;letter-spacing:-.03em;margin:0 0 4px}
+h3{font-size:18px;margin:0}
+.muted{color:var(--ink-3)}.small{font-size:12px}
+.nav{display:flex;gap:7px;align-items:flex-end;overflow-x:auto;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:24px}
+.nav button{white-space:nowrap;border:0;background:transparent;color:var(--ink-3);padding:11px 16px;border-radius:9px;cursor:pointer;font-weight:650}
+.nav button.active{background:var(--navy);color:var(--navy-ink)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:24px;box-shadow:0 5px 25px rgba(32,55,85,.035)}
+.section{display:none}.section.active{display:block}
+.cta{color:var(--red);font-weight:650;font-size:14px;margin:0 0 20px}
+.moments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.moment{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--surface)}
+.moment.trans{background:var(--band)}
+.msub{font-size:12px;color:var(--ink-3);margin-bottom:16px}
+.act{margin-bottom:16px}
+.an{font-size:13px;font-weight:650;margin-bottom:5px}
+.sbar{display:flex;width:100%;height:36px;border-radius:7px;overflow:hidden;cursor:pointer;border:0;padding:0;background:var(--soft)}
+.sbar:hover{filter:brightness(.95)}
+.sbar span{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;border-right:2px solid var(--surface);min-width:0}
+.sbar span:last-child{border-right:0}
+.awarn{font-size:12px;color:var(--red);margin-top:4px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;font-size:12px;color:var(--ink-2)}
+.legend i,.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+label{font-size:12px;color:var(--ink-3);font-weight:700;display:block;margin-bottom:7px}
+select{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:11px 12px;font:inherit;width:100%;max-width:360px;color:var(--ink)}
+.profile{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;margin-top:26px}
+.donut{width:min(100%,260px);aspect-ratio:1;border-radius:50%;position:relative;margin:auto}
+.donut::after{content:'100%';position:absolute;inset:27%;background:var(--surface);border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:800;color:var(--ink)}
+.dl{display:grid;gap:14px}
+.dl>div{display:flex;align-items:center;gap:10px;font-size:15px}
+.dl strong{margin-left:auto;font-size:18px}
+.pname{font-size:22px;font-weight:800;margin-bottom:2px}
+.note{font-size:12.5px;color:var(--ink-3);margin-top:6px}
+.mix{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:start}
+.team{display:grid;gap:8px}
+.prow{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;cursor:pointer;text-align:left}
+.prow:hover{border-color:var(--accent)}
+.prow.sel{border-color:var(--navy);box-shadow:0 0 0 1px var(--navy)}
+.pn{font-weight:650;font-size:14px}
+.pbar{display:flex;height:26px;border-radius:6px;overflow:hidden;background:var(--soft)}
+.pbar span{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11.5px;font-weight:700;border-right:2px solid var(--surface)}
+.pbar span:last-child{border-right:0}
+.card{border:1px solid var(--line);border-radius:14px;padding:20px}
+.card .donut{width:min(100%,220px)}
+@media(max-width:800px){.mix{grid-template-columns:1fr}.prow{grid-template-columns:90px 1fr}}
+.navgroup{margin-left:14px;padding-left:14px;border-left:1px solid var(--line)}
+.navcap{font-size:11px;letter-spacing:.1em;font-weight:800;color:#53718f;text-transform:uppercase;margin:0 0 4px 16px}
+.navbtns{display:flex;gap:7px}
+.grp{font-size:12.5px;color:var(--ink-2);margin:4px 0 0 21px;line-height:1.6}
+.grp span{display:inline-block;background:var(--surface-2);border-radius:6px;padding:1px 7px;margin:0 4px 4px 0}
+.drawer-bg{position:fixed;inset:0;background:rgba(10,20,35,.35);z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);z-index:21;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 22px) 22px calc(env(safe-area-inset-bottom,0px) + 30px);border-left:1px solid var(--line);box-shadow:-10px 0 30px rgba(0,0,0,.12)}
+.close{float:right;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:16px}
+td,th{padding:10px 6px;border-bottom:1px solid var(--line-2);text-align:left}
+th{font-size:12px;color:var(--ink-3)}
+td:last-child,th:last-child{text-align:right}
+@media(max-width:900px){.moments{grid-template-columns:1fr}}
+@media(max-width:700px){.app{padding:18px 12px}.panel{padding:16px}.profile{grid-template-columns:1fr}h1{font-size:24px}}
+@media print{.nav{display:none}.panel{box-shadow:none}.sbar span,.donut,.dot,.legend i{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body><div class="app">
+<header><div class="eyebrow">FILOVENT · ORGANISATION INTERNE</div><h1>Organisation Conciergerie</h1></header>
+<nav class="nav">
+  <button data-page="vision">Vision globale</button>
+  <div class="navgroup"><div class="navcap">Détail de la nouvelle organisation</div><div class="navbtns">
+  <button data-page="aujourdhui">Aujourd’hui</button>
+  <button data-page="transition">Transition</button>
+  <button data-page="demain">Demain</button></div></div>
+  <button data-page="detail" class="navsolo">Détail de l’ensemble des missions</button>
+</nav>
+
+<section id="vision" class="section"><div class="panel">
+  <h2>Aujourd’hui, transition, demain</h2>
+  <p class="cta">Cliquez sur une barre pour voir le détail.</p>
+  <div class="moments" id="moments"></div>
+  
+</div></section>
+
+<section id="aujourdhui" class="section"><div class="panel" data-moment="today"></div></section>
+<section id="transition" class="section"><div class="panel" data-moment="transition"></div></section>
+<section id="demain" class="section"><div class="panel" data-moment="demain"></div></section>
+
+<section id="detail" class="section">
+  <div class="subnav" id="subnav">
+    <button data-sub="vue">Vue d’ensemble</button>
+    <button data-sub="equipe">Collaborateurs</button>
+    <button data-sub="missions">Cartographie des missions</button>
+    <button data-sub="ameliorations">Améliorations</button>
+    <button data-sub="it">Projets IT</button>
+  </div>
+<section id="vue" class="subsection">
+  <div class="metrics"><div class="metric"><strong>6</strong><span>Collaborateurs</span></div><div class="metric"><strong>5</strong><span>Familles de temps</span></div><div class="metric"><strong>100 %</strong><span>Répartis par personne</span></div></div>
+  <div class="panel" style="margin-top:16px"><h2>Les rôles de l'équipe</h2><div id="cards" class="grid"></div></div>
+  <div class="panel"><h2>Répartition estimée du temps de travail</h2><p class="muted small">Cliquez sur une barre pour consulter la fiche. Survolez les segments pour lire les pourcentages.</p><div id="bars"></div><div id="legend" class="legend"></div><div class="hint">Estimations sur une semaine habituelle, et non mesure de productivité. Une activité est comptée dans une seule famille.</div></div>
+  <div class="panel"><h2>Définition des cinq familles de temps</h2><div id="definitions"></div></div>
+</section>
+
+<section id="equipe" class="subsection"><div class="panel"><h2>Fiches collaborateurs</h2><div class="twocol"><div><label for="person">Collaborateur</label><select id="person"></select></div><div><label>Niveau de détail</label><div class="switch"><button id="simple" class="active">Vue simplifiée</button><button id="full">Vue complète</button></div></div></div><div id="profile"></div></div></section>
+
+<section id="missions" class="subsection"><div class="panel">
+  <h2>Cartographie des missions</h2>
+  <div class="viewbar">
+    <div class="switch"><button id="vlist" class="active">Vue liste</button><button id="vmatrix">Vue matrice</button></div>
+    <div class="key" id="key" hidden><span><i class="cell q"></i>Au quotidien</span><span><i class="cell r"></i>En renfort</span></div>
+  </div>
+  <p class="muted small" id="mintro">Recherchez une mission, filtrez par collaborateur et famille, puis ouvrez sa fiche détaillée.</p>
+  <div class="filters"><div><label for="search">Rechercher</label><input id="search" placeholder="N° de mission, mot-clé, responsable…"></div><div><label for="filterperson" id="lperson">Collaborateur</label><select id="filterperson"></select></div><div><label for="filterfamily">Famille</label><select id="filterfamily"></select></div></div>
+  <div id="listview"><div class="tablewrap"><table><thead><tr><th>Mission</th><th>Famille</th><th>Au quotidien</th><th>Renfort</th><th>Automatisation</th></tr></thead><tbody id="missionrows"></tbody></table></div></div>
+  <div id="matrixview" hidden><div class="tablewrap"><table class="matrix" id="matrix"></table></div></div>
+  <p id="count" class="muted small"></p>
+</div></section>
+
+<section id="ameliorations" class="subsection"><div class="panel"><h2>Améliorations &amp; automatisations</h2><p class="muted">Opportunités repérées lors de la revue des missions. Une opportunité n'est pas automatiquement un projet IT approuvé.</p><div class="filters"><div><label for="asearch">Rechercher une piste</label><input id="asearch" placeholder="Documents, Claude, portail, relances…"></div><div><label for="aperson">Collaborateur</label><select id="aperson"></select></div><div><label for="apotential">Potentiel</label><select id="apotential"><option value="">Tous</option><option value="Oui, en partie">Oui, en partie</option><option value="À préciser">À préciser</option></select></div></div><div id="opportunities" class="list"></div></div></section>
+
+<section id="it" class="subsection"><div class="panel"><h2>Gros projets IT — Nouvelle TECH</h2><p class="muted">Rubrique distincte pour rendre visibles les développements structurants, sans inventer les projets qui restent à détailler.</p><div class="mission"><h3>Mission 7 — Gros projets de développement IT structurants</h3><div class="empty">Liste des grands projets à compléter ultérieurement : intitulé, objectif, priorité, statut et échéance.</div></div><h3 style="margin-top:24px">Autres responsabilités IT validées</h3><div id="itmissions" class="list"></div><div class="hint">Le temps de Nouvelle TECH est réparti à 100 % dans « Projets IT &amp; développements », y compris roadmap et reporting. Aucun pourcentage supplémentaire n'est créé.</div></div></section>
+
+
+</section>
+<div id="drawerwrap" hidden><div class="drawer-bg" id="drawerbg"></div><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dtitle"><button class="close" id="dclose" aria-label="Fermer">Fermer ✕</button><div id="dbody"></div></aside></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt1=x=>(Math.round(x*10)/10).toLocaleString('fr-FR');
+const fmt=x=>Math.round(x).toLocaleString('fr-FR');
+
+/* Données validées : part du temps de chaque personne (Opérations, SAV, Management, Amélioration, IT) */
+const RECRUES=['Nouvelle India','Nouvelle TECH'];
+const TIME={
+  today:{'Manon':[2.5,11.25,12.5,38.75,35],'India':[70,30,0,0,0],'Hassnaa':[37.5,62.5,0,0,0],'Abla':[90,10,0,0,0],'Sabah':[67.5,32.5,0,0,0]},
+  p1:{'India':[40,10.6,14.1,35.3,0],'Hassnaa':[70,30,0,0,0],'Abla':[70,30,0,0,0],'Sabah':[60,40,0,0,0],'Nouvelle India':[0,0,0,0,0],'Nouvelle TECH':[0,0,0,0,0]},
+  p2:{'India':[18,18,24,40,0],'Nouvelle India':[40,35,5,20,0],'Hassnaa':[60,40,0,0,0],'Abla':[70,30,0,0,0],'Sabah':[60,40,0,0,0],'Nouvelle TECH':[0,0,0,0,100]},
+  p3:{'India':[15,15,20,50,0],'Nouvelle India':[40,35,5,20,0],'Hassnaa':[50,50,0,0,0],'Abla':[70,30,0,0,0],'Sabah':[60,40,0,0,0],'Nouvelle TECH':[0,0,0,0,100]}
+};
+TIME.transition=Object.fromEntries(Object.keys(TIME.p1).map(n=>[n,TIME.p1[n].map((v,i)=>(v+TIME.p2[n][i]+TIME.p3[n][i])/3)]));
+TIME.demain=TIME.p3;
+
+const MIS={"1": {"t": "Suivi administratif charter et documents clients", "o": ["Abla", "Sabah"], "b": ["Hassnaa"]}, "2": {"t": "Assistance aux dossiers d’assurance Gritchen", "o": ["Hassnaa", "Nouvelle India"], "b": ["India"]}, "3": {"t": "Traitement des réclamations SAV niveau 1 (≤ 300 €)", "o": ["Abla", "Sabah", "Nouvelle India", "Hassnaa", "India"], "b": []}, "4+33": {"t": "Reporting SAV, indicateurs et rapport Claude à la direction", "o": ["Hassnaa"], "b": ["India", "Nouvelle India"]}, "5": {"t": "Questionnaires de satisfaction et création de dossiers SAV", "o": ["Sabah"], "b": ["Nouvelle India", "Hassnaa"]}, "6": {"t": "Gestion des annulations et transmission administrative", "o": ["Hassnaa"], "b": ["India", "Nouvelle India"]}, "7": {"t": "Gros projets de développement IT structurants", "o": ["Nouvelle TECH"], "b": []}, "8": {"t": "Suivi des échéances documentaires charter et relances", "o": ["Abla"], "b": ["Sabah", "Hassnaa", "Nouvelle India"]}, "10": {"t": "Réponses aux questions de préparation des croisières", "o": ["Abla", "Sabah", "Nouvelle India", "Hassnaa"], "b": []}, "11": {"t": "Gestion des annulations de vols", "o": ["Abla", "Sabah"], "b": ["Hassnaa", "Nouvelle India"]}, "12": {"t": "Collecte et transmission des documents croisière", "o": ["Abla", "Sabah"], "b": ["Nouvelle India", "Hassnaa"]}, "13": {"t": "Réponses aux questions de préparation charter", "o": ["Abla", "Sabah", "Hassnaa"], "b": ["Nouvelle India"]}, "14": {"t": "Vente de services additionnels", "o": ["Hassnaa", "Abla", "Sabah"], "b": ["Nouvelle India"]}, "15": {"t": "Gestion des extras et de leurs modifications", "o": ["Hassnaa", "Abla", "Sabah", "Nouvelle India"], "b": ["India"]}, "16": {"t": "Modifications de vols et organisation associée", "o": ["Abla", "Nouvelle India", "Sabah"], "b": ["India"]}, "17": {"t": "Gestion des urgences charter", "o": ["Hassnaa", "Nouvelle India", "India"], "b": ["Sabah"]}, "18": {"t": "Informations pratiques avant départ", "o": ["Abla", "Sabah"], "b": ["Nouvelle India", "Hassnaa"]}, "20": {"t": "Modifications contractuelles croisière et charter", "o": ["Hassnaa", "Nouvelle India"], "b": ["India"]}, "21": {"t": "Définition des priorités opérationnelles", "o": ["Nouvelle India", "Hassnaa"], "b": ["India"]}, "22+53": {"t": "Dossiers sensibles, arbitrages et situations de crise", "o": ["Nouvelle India", "Hassnaa", "India"], "b": []}, "23": {"t": "Animation du daily de l’équipe", "o": ["India", "Nouvelle India"], "b": ["Hassnaa"]}, "24+50": {"t": "Suivi du volume des tickets, retards et délais", "o": ["Nouvelle India", "Hassnaa"], "b": ["India"]}, "25": {"t": "Répartition des tickets et priorisation", "o": ["Nouvelle India", "Hassnaa"], "b": ["India"]}, "27": {"t": "Congés, plannings et astreintes", "o": ["India"], "b": ["Nouvelle India"]}, "28": {"t": "Performance individuelle et primes", "o": ["India"], "b": []}, "29": {"t": "Formation et accompagnement des collaborateurs", "o": ["India", "Hassnaa"], "b": []}, "30": {"t": "Relations partenaires et arbitrages", "o": ["India"], "b": ["Nouvelle India", "Hassnaa"]}, "31+42+55": {"t": "Réclamations complexes, dédommagements et précontentieux", "o": ["Nouvelle India", "Hassnaa", "Sabah"], "b": ["India"]}, "32": {"t": "Suivi des remboursements avec l’administration", "o": ["Hassnaa"], "b": ["India"]}, "34+35": {"t": "Amélioration des méthodes de travail", "o": ["India", "Nouvelle India"], "b": ["Nouvelle TECH"]}, "36": {"t": "Formalisation des procédures internes", "o": ["India"], "b": ["Nouvelle India", "Nouvelle TECH"]}, "37A": {"t": "Conception fonctionnelle des améliorations, automatisations et IA", "o": ["India"], "b": []}, "37B": {"t": "Développement et déploiement des automatisations et solutions IA", "o": ["Nouvelle TECH"], "b": []}, "40": {"t": "Pilotage de la performance du service", "o": ["India"], "b": ["Nouvelle India"]}, "41": {"t": "Réponses aux avis clients négatifs", "o": ["India", "Hassnaa"], "b": ["Nouvelle India"]}, "43": {"t": "Gestion des réclamations SAV niveau 3", "o": ["India", "Hassnaa"], "b": ["Nouvelle India"]}, "44": {"t": "Gestion des urgences croisière", "o": ["Abla", "Nouvelle India"], "b": ["India", "Hassnaa"]}, "45": {"t": "Reporting et suivi des projets IT", "o": ["Nouvelle TECH", "Nouvelle India"], "b": []}, "46+47": {"t": "Recrutement et intégration des collaborateurs", "o": ["India", "Hassnaa"], "b": ["Nouvelle India"]}, "52": {"t": "Contrôle qualité des réponses clients", "o": ["Nouvelle India"], "b": ["India"]}, "59": {"t": "Pilotage de la roadmap IT", "o": ["Nouvelle TECH"], "b": []}, "65": {"t": "Gestion des préparatifs clients Crewed & Privatif", "o": ["Nouvelle India"], "b": ["India"]}};
+const GROUPS=[
+ [['Préparation des voyages','Documents, vols, extras, questions avant départ',['1','2','8','10','11','12','13','14','15','16','18','20','65']],['SAV et réclamations','Réclamations, annulations, remboursements, avis',['3','4+33','5','6','31+42+55','32','41','43']],['Urgences','Situations sensibles et crises',['17','22+53','44']]],
+ [['Amélioration continue','Méthodes, procédures, performance, conception IA',['34+35','36','37A','40']],['Projets IT','Développements, automatisations, roadmap',['7','37B','45','59']]],
+ [['Organisation du quotidien','Priorités, daily, tickets',['21','23','24+50','25']],['Gestion de l’équipe','Plannings, performance, formation, recrutement',['27','28','29','46+47']],['Qualité et partenaires','Contrôle qualité, relations partenaires',['30','52']]]];
+const ACTS=[['Suivi client',[0,1]],['Amélioration et IT',[3,4]],['Tâches annexes',[2]]];
+const ASHORT=['Suivi client','Amélioration et IT','Annexes'];
+const ACOL=['#3E6A96','#E0A458','#6BAA92'];
+const MOMS={today:['Aujourd’hui','Avec Manon · 5 personnes'],transition:['Transition','12 mois · 6 postes, dont 2 en formation au début'],demain:['Demain','Sans Manon · 6 postes']};
+const PCOL={'Manon':['#F0997B','#4A1B0C'],'India':['#534AB7','#FFFFFF'],'Nouvelle India':['#CECBF6','#26215C'],'Nouvelle TECH':['#ED93B1','#4B1528'],'Hassnaa':['#85B7EB','#042C53'],'Abla':['#5DCAA5','#04342C'],'Sabah':['#97C459','#173404']};
+
+function shares(m,idx){const v=Object.entries(TIME[m]).map(([n,a])=>[n,idx.reduce((s,i)=>s+a[i],0)]).filter(([,x])=>x>0);const t=v.reduce((s,[,x])=>s+x,0);
+  return v.map(([n,x])=>({n,pct:x/t*100})).sort((a,b)=>b.pct-a.pct)}
+/* Temps d'une personne regroupé en 3 activités ; pour une recrue en transition, sa cible une fois formée */
+function personSplit(m,n){const a=(m==='transition'&&RECRUES.includes(n))?TIME.p3[n]:TIME[m][n];return ACTS.map(([,idx])=>idx.reduce((s,i)=>s+a[i],0))}
+
+/* Vision globale */
+$('moments').innerHTML=Object.entries(MOMS).map(([m,[t,sub]])=>`<div class="moment ${m==='transition'?'trans':''}"><h3 style="margin-bottom:14px">${t}</h3>`+
+  ACTS.map(([a,idx],k)=>{const r=shares(m,idx);return `<div class="act"><div class="an">${a}</div><button class="sbar" data-m="${m}" data-a="${k}" aria-label="${a}, ${t} : voir la répartition">`+
+    r.map(x=>{const c=PCOL[x.n];return `<span title="${esc(x.n)} : ${fmt(x.pct)} %" style="flex:${x.pct} 1 0;background:${c[0]};color:${c[1]}">${x.pct>=13?esc(x.n.replace('Nouvelle ','N. ')):''}</span>`}).join('')+
+    `</button>${m==='transition'&&k===1?'<div class="awarn">⚠ IT à 0 les 4 premiers mois</div>':''}</div>`}).join('')+`</div>`).join('');
+void Object.entries(PCOL).map(([n,c])=>`<span><i style="background:${c[0]}"></i>${n}</span>`).join('');
+document.querySelectorAll('.sbar').forEach(b=>b.onclick=()=>{
+  const m=b.dataset.m,[a,idx]=ACTS[+b.dataset.a],r=shares(m,idx);
+  $('dbody').innerHTML=`<div class="eyebrow">${MOMS[m][0].toUpperCase()}</div><h2 id="dtitle">${a}</h2><table><thead><tr><th>Personne</th><th>Part</th></tr></thead><tbody>${r.map(x=>`<tr><td><i class="dot" style="background:${PCOL[x.n][0]}"></i>${esc(x.n)}</td><td><b>${fmt(x.pct)} %</b></td></tr>`).join('')}</tbody></table>`;
+  $('drawerwrap').hidden=false;$('dclose').focus();
+});
+const closeDrawer=()=>{$('drawerwrap').hidden=true};
+$('dclose').onclick=closeDrawer;$('drawerbg').onclick=closeDrawer;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+
+const CATS=['Suivi des dossiers clients','SAV & réclamations','Pilotage & management','Amélioration continue','Projets IT'];
+const CSHORT=['Suivi dossiers','SAV','Management','Amélioration continue','IT'];
+const CCOL=['#4486C7','#E9A65A','#5AAB92','#9977C7','#CE7695'];
+const CAT_GROUPS=[[GROUPS[0][0]],[GROUPS[0][1],GROUPS[0][2]],GROUPS[2],[GROUPS[1][0]],[GROUPS[1][1]]];
+function personCats(m,n){return (m==='transition'&&RECRUES.includes(n))?TIME.p3[n]:TIME[m][n]}
+function grpLine(m,n,i){
+  if(m==='today')return '';
+  const items=CAT_GROUPS[i].map(([t,,ids])=>{const own=ids.filter(id=>MIS[id]&&MIS[id].o.includes(n));const bk=ids.filter(id=>MIS[id]&&MIS[id].b.includes(n));
+    return own.length?`<span title="${esc(own.map(id=>MIS[id].t).join(' · '))}">${t} · ${own.length} mission${own.length>1?"s":""}</span>`:bk.length?`<span style="opacity:.75" title="En renfort : ${esc(bk.map(id=>MIS[id].t).join(' · '))}">${t} · renfort</span>`:''}).filter(Boolean);
+  return items.length?`<div class="grp">${items.join('')}</div>`:'';
+}
+/* Dashboards par moment : vue d'ensemble de l'équipe + fiche de la personne choisie */
+document.querySelectorAll('[data-moment]').forEach(panel=>{
+  const m=panel.dataset.moment,people=Object.keys(TIME[m]);let cur=people[0];
+  panel.innerHTML=`<h2>${MOMS[m][0]}</h2><p class="cta" style="margin-bottom:18px">Cliquez sur une personne pour voir sa fiche.</p>
+    <div class="mix"><div class="team" id="team-${m}"></div><div class="card" id="prof-${m}"></div></div>
+    <div class="legend">${CATS.map((a,i)=>`<span><i style="background:${CCOL[i]}"></i>${a}</span>`).join('')}</div>`;
+  const draw=()=>{
+    $('team-'+m).innerHTML=people.map(n=>{const v=personCats(m,n);return `<button class="prow ${n===cur?'sel':''}" data-p="${esc(n)}"><span class="pn">${esc(n)}</span><span class="pbar">${v.map((x,i)=>x?`<span style="flex:${x} 1 0;background:${CCOL[i]}">${x>=22?CSHORT[i]+' '+fmt1(x)+'%':x>=8?fmt1(x)+'%':''}</span>`:'').join('')}</span></button>`}).join('');
+    $('team-'+m).querySelectorAll('.prow').forEach(b=>b.onclick=()=>{cur=b.dataset.p;draw()});
+    const v=personCats(m,cur);let s=0;
+    const grad=v.map((x,i)=>{const a=s;s+=x;return x?`${CCOL[i]} ${a}% ${s}%`:''}).filter(Boolean).join(',');
+    $('prof-'+m).innerHTML=`<div class="pname" style="text-align:center">${esc(cur)}</div>${m==='transition'&&RECRUES.includes(cur)?'<div class="note" style="text-align:center">En formation les 4 premiers mois</div>':''}<div class="donut" style="background:conic-gradient(${grad});margin-top:14px" role="img" aria-label="Répartition du temps de ${esc(cur)}"></div><div class="dl" style="margin-top:18px">${v.map((x,i)=>x?`<div style="display:block"><div style="display:flex;align-items:center;gap:10px"><i class="dot" style="background:${CCOL[i]}"></i>${CATS[i]}<strong style="margin-left:auto">${fmt1(x)} %</strong></div>${grpLine(m,cur,i)}</div>`:'').join('')}</div>`;
+  };
+  draw();
+});
+
+/* ===== Détail des missions (version complète) ===== */
+(function(){
+
+const DATA={"people": [{"name": "India", "role": "Management · Amélioration continue · Décisions", "values": [15, 15, 20, 50, 0], "regular": ["23", "34+35", "36", "37A", "40"], "other": ["3", "21", "22+53", "27", "28", "29", "30", "41", "43", "46+47"]}, {"name": "Nouvelle India", "role": "Pilotage opérationnel · Tickets · Clients", "values": [40, 35, 5, 20, 0], "regular": ["3", "10", "15", "16", "17", "20", "21", "24+50", "25", "44", "52", "65"], "other": ["2", "22+53", "23", "31+42+55", "34+35", "45"]}, {"name": "Hassnaa", "role": "SAV · Annulations · Réclamations", "values": [50, 50, 0, 0, 0], "regular": ["2", "3", "4+33", "6", "10", "13", "14", "15", "20", "21", "22+53", "24+50", "25", "31+42+55", "32"], "other": ["17", "29", "41", "43", "46+47"]}, {"name": "Abla", "role": "Documents · Expertise clients", "values": [70, 30, 0, 0, 0], "regular": ["1", "10", "11", "12", "13", "14", "15", "16", "18", "44"], "other": ["3"]}, {"name": "Sabah", "role": "Documents · Expertise clients", "values": [60, 40, 0, 0, 0], "regular": ["1", "3", "5", "10", "12", "13", "14", "15", "16", "18"], "other": ["11", "31+42+55"]}, {"name": "Nouvelle TECH", "role": "Développements · Automatisations · Roadmap IT", "values": [0, 0, 0, 0, 100], "regular": ["7", "37B", "45", "59"], "other": []}], "missions": [{"id": "1", "family": "Expérience client & opérations", "title": "Suivi administratif charter et documents clients", "owners": ["Abla", "Sabah"], "backup": ["Hassnaa"], "automation": "Oui, en partie", "opportunity": "Tableau de suivi des documents reçus par partenaire et destination"}, {"id": "2", "family": "Expérience client & opérations", "title": "Assistance aux dossiers d’assurance Gritchen", "owners": ["Hassnaa", "Nouvelle India"], "backup": ["India"], "automation": "Non", "opportunity": ""}, {"id": "3", "family": "Satisfaction client & SAV", "title": "Traitement des réclamations SAV niveau 1 (≤ 300 €)", "owners": ["Abla", "Sabah", "Nouvelle India", "Hassnaa", "India"], "backup": [], "automation": "Oui, en partie", "opportunity": "Barème historique des dédommagements"}, {"id": "4+33", "family": "Satisfaction client & SAV", "title": "Reporting SAV, indicateurs et rapport Claude à la direction", "owners": ["Hassnaa"], "backup": ["India", "Nouvelle India"], "automation": "Oui, en partie", "opportunity": "Connexion de Claude au tableau de reporting SAV"}, {"id": "5", "family": "Satisfaction client & SAV", "title": "Questionnaires de satisfaction et création de dossiers SAV", "owners": ["Sabah"], "backup": ["Nouvelle India", "Hassnaa"], "automation": "Non", "opportunity": ""}, {"id": "6", "family": "Satisfaction client & SAV", "title": "Gestion des annulations et transmission administrative", "owners": ["Hassnaa"], "backup": ["India", "Nouvelle India"], "automation": "Oui, en partie", "opportunity": "Automatisation partielle du processus d’annulation"}, {"id": "7", "family": "Projets & développement des outils", "title": "Gros projets de développement IT structurants", "owners": ["Nouvelle TECH"], "backup": [], "automation": "Non", "opportunity": "Projets individuels à détailler ultérieurement"}, {"id": "8", "family": "Expérience client & opérations", "title": "Suivi des échéances documentaires charter et relances", "owners": ["Abla"], "backup": ["Sabah", "Hassnaa", "Nouvelle India"], "automation": "Oui, en partie", "opportunity": "Automatisation des relances de documents manquants"}, {"id": "10", "family": "Expérience client & opérations", "title": "Réponses aux questions de préparation des croisières", "owners": ["Abla", "Sabah", "Nouvelle India", "Hassnaa"], "backup": [], "automation": "Non", "opportunity": ""}, {"id": "11", "family": "Expérience client & opérations", "title": "Gestion des annulations de vols", "owners": ["Abla", "Sabah"], "backup": ["Hassnaa", "Nouvelle India"], "automation": "Non", "opportunity": ""}, {"id": "12", "family": "Expérience client & opérations", "title": "Collecte et transmission des documents croisière", "owners": ["Abla", "Sabah"], "backup": ["Nouvelle India", "Hassnaa"], "automation": "Oui, en partie", "opportunity": "Portail de dépôt des documents clients"}, {"id": "13", "family": "Expérience client & opérations", "title": "Réponses aux questions de préparation charter", "owners": ["Abla", "Sabah", "Hassnaa"], "backup": ["Nouvelle India"], "automation": "Oui, en partie", "opportunity": "Portail client avec assistance IA"}, {"id": "14", "family": "Expérience client & opérations", "title": "Vente de services additionnels", "owners": ["Hassnaa", "Abla", "Sabah"], "backup": ["Nouvelle India"], "automation": "Oui, en partie", "opportunity": "Simplification de la proposition de services"}, {"id": "15", "family": "Expérience client & opérations", "title": "Gestion des extras et de leurs modifications", "owners": ["Hassnaa", "Abla", "Sabah", "Nouvelle India"], "backup": ["India"], "automation": "Oui, en partie", "opportunity": "Simplification du traitement des extras"}, {"id": "16", "family": "Expérience client & opérations", "title": "Modifications de vols et organisation associée", "owners": ["Abla", "Nouvelle India", "Sabah"], "backup": ["India"], "automation": "Non", "opportunity": ""}, {"id": "17", "family": "Urgences & gestion des situations sensibles", "title": "Gestion des urgences charter", "owners": ["Hassnaa", "Nouvelle India", "India"], "backup": ["Sabah"], "automation": "Non", "opportunity": ""}, {"id": "18", "family": "Expérience client & opérations", "title": "Informations pratiques avant départ", "owners": ["Abla", "Sabah"], "backup": ["Nouvelle India", "Hassnaa"], "automation": "Oui, en partie", "opportunity": "Portail d’informations pratiques client"}, {"id": "20", "family": "Expérience client & opérations", "title": "Modifications contractuelles croisière et charter", "owners": ["Hassnaa", "Nouvelle India"], "backup": ["India"], "automation": "Non", "opportunity": ""}, {"id": "21", "family": "Management & pilotage opérationnel", "title": "Définition des priorités opérationnelles", "owners": ["Nouvelle India", "Hassnaa"], "backup": ["India"], "automation": "Non", "opportunity": ""}, {"id": "22+53", "family": "Urgences & gestion des situations sensibles", "title": "Dossiers sensibles, arbitrages et situations de crise", "owners": ["Nouvelle India", "Hassnaa", "India"], "backup": [], "automation": "Non", "opportunity": ""}, {"id": "23", "family": "Management & pilotage opérationnel", "title": "Animation du daily de l’équipe", "owners": ["India", "Nouvelle India"], "backup": ["Hassnaa"], "automation": "À préciser", "opportunity": ""}, {"id": "24+50", "family": "Management & pilotage opérationnel", "title": "Suivi du volume des tickets, retards et délais", "owners": ["Nouvelle India", "Hassnaa"], "backup": ["India"], "automation": "Oui, en partie", "opportunity": "Tableau de bord Zoho / Claude"}, {"id": "25", "family": "Management & pilotage opérationnel", "title": "Répartition des tickets et priorisation", "owners": ["Nouvelle India", "Hassnaa"], "backup": ["India"], "automation": "Non", "opportunity": ""}, {"id": "27", "family": "Management & pilotage opérationnel", "title": "Congés, plannings et astreintes", "owners": ["India"], "backup": ["Nouvelle India"], "automation": "Non", "opportunity": ""}, {"id": "28", "family": "Management & pilotage opérationnel", "title": "Performance individuelle et primes", "owners": ["India"], "backup": [], "automation": "Non", "opportunity": ""}, {"id": "29", "family": "Management & pilotage opérationnel", "title": "Formation et accompagnement des collaborateurs", "owners": ["India", "Hassnaa"], "backup": [], "automation": "Non", "opportunity": ""}, {"id": "30", "family": "Management & pilotage opérationnel", "title": "Relations partenaires et arbitrages", "owners": ["India"], "backup": ["Nouvelle India", "Hassnaa"], "automation": "Non", "opportunity": ""}, {"id": "31+42+55", "family": "Satisfaction client & SAV", "title": "Réclamations complexes, dédommagements et précontentieux", "owners": ["Nouvelle India", "Hassnaa", "Sabah"], "backup": ["India"], "automation": "Non", "opportunity": "Sabah : uniquement SAV niveau 2, hors arbitrages et précontentieux"}, {"id": "32", "family": "Satisfaction client & SAV", "title": "Suivi des remboursements avec l’administration", "owners": ["Hassnaa"], "backup": ["India"], "automation": "Non", "opportunity": ""}, {"id": "34+35", "family": "Amélioration continue & performance", "title": "Amélioration des méthodes de travail", "owners": ["India", "Nouvelle India"], "backup": ["Nouvelle TECH"], "automation": "Non", "opportunity": ""}, {"id": "36", "family": "Amélioration continue & performance", "title": "Formalisation des procédures internes", "owners": ["India"], "backup": ["Nouvelle India", "Nouvelle TECH"], "automation": "Non", "opportunity": ""}, {"id": "37A", "family": "Amélioration continue & performance", "title": "Conception fonctionnelle des améliorations, automatisations et IA", "owners": ["India"], "backup": [], "automation": "Non", "opportunity": ""}, {"id": "37B", "family": "Projets & développement des outils", "title": "Développement et déploiement des automatisations et solutions IA", "owners": ["Nouvelle TECH"], "backup": [], "automation": "Non", "opportunity": ""}, {"id": "40", "family": "Amélioration continue & performance", "title": "Pilotage de la performance du service", "owners": ["India"], "backup": ["Nouvelle India"], "automation": "Oui, en partie", "opportunity": "Tableau de bord de performance"}, {"id": "41", "family": "Satisfaction client & SAV", "title": "Réponses aux avis clients négatifs", "owners": ["India", "Hassnaa"], "backup": ["Nouvelle India"], "automation": "Non", "opportunity": ""}, {"id": "43", "family": "Satisfaction client & SAV", "title": "Gestion des réclamations SAV niveau 3", "owners": ["India", "Hassnaa"], "backup": ["Nouvelle India"], "automation": "Non", "opportunity": ""}, {"id": "44", "family": "Urgences & gestion des situations sensibles", "title": "Gestion des urgences croisière", "owners": ["Abla", "Nouvelle India"], "backup": ["India", "Hassnaa"], "automation": "Non", "opportunity": ""}, {"id": "45", "family": "Projets & développement des outils", "title": "Reporting et suivi des projets IT", "owners": ["Nouvelle TECH", "Nouvelle India"], "backup": [], "automation": "Non", "opportunity": ""}, {"id": "46+47", "family": "Management & pilotage opérationnel", "title": "Recrutement et intégration des collaborateurs", "owners": ["India", "Hassnaa"], "backup": ["Nouvelle India"], "automation": "Non", "opportunity": "Hassnaa : onboarding uniquement ; Nouvelle India : renfort onboarding"}, {"id": "52", "family": "Management & pilotage opérationnel", "title": "Contrôle qualité des réponses clients", "owners": ["Nouvelle India"], "backup": ["India"], "automation": "Non", "opportunity": ""}, {"id": "59", "family": "Projets & développement des outils", "title": "Pilotage de la roadmap IT", "owners": ["Nouvelle TECH"], "backup": [], "automation": "Non", "opportunity": ""}, {"id": "65", "family": "Expérience client & opérations", "title": "Gestion des préparatifs clients Crewed & Privatif", "owners": ["Nouvelle India"], "backup": ["India"], "automation": "À préciser", "opportunity": "Attribution validée après revue"}], "categories": ["Opérations clients", "SAV & réclamations", "Pilotage & management", "Amélioration continue", "Projets IT & développements"], "colors": ["#4486C7", "#E9A65A", "#5AAB92", "#9977C7", "#CE7695"]};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const byId=id=>DATA.missions.find(m=>m.id===id);
+const names=DATA.people.map(p=>p.name);
+const families=[...new Set(DATA.missions.map(m=>m.family))];
+const opts=(arr,all)=>'<option value="">'+esc(all)+'</option>'+arr.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join('');
+
+
+function goPerson(n){$('person').value=n;renderProfile();page('equipe')}
+
+/* Vue d'ensemble */
+$('cards').innerHTML=DATA.people.map(p=>`<button class="tile" data-person="${esc(p.name)}"><strong>${esc(p.name)}</strong><span class="muted small">${esc(p.role)}</span></button>`).join('');
+document.querySelectorAll('[data-person]').forEach(b=>b.onclick=()=>goPerson(b.dataset.person));
+$('legend').innerHTML=DATA.categories.map((c,i)=>`<span><i class="dot" style="background:${DATA.colors[i]}"></i>${esc(c)}</span>`).join('');
+$('bars').innerHTML=DATA.people.map(p=>`<div class="barrow" data-bar="${esc(p.name)}" role="button" tabindex="0"><div class="name">${esc(p.name)}</div><div class="bar">${p.values.map((v,i)=>v?`<div class="barseg" style="width:${v}%;background:${DATA.colors[i]}" title="${esc(DATA.categories[i])} : ${v}%">${v>=15?v+'%':''}</div>`:'').join('')}</div></div>`).join('');
+document.querySelectorAll('[data-bar]').forEach(x=>{x.onclick=()=>goPerson(x.dataset.bar);x.onkeydown=e=>{if(e.key==='Enter')goPerson(x.dataset.bar)}});
+const defs=[['Opérations clients','Préparation et suivi normal des dossiers : questions avant départ, documents, extras, vols, assurances avant départ et informations pratiques.'],['SAV & réclamations','Résolution des problèmes : réclamations, annulations, remboursements, avis négatifs, urgences et assistance aux sinistres.'],['Pilotage & management','Organisation de l’équipe : daily, répartition et suivi des tickets, priorités, indicateurs, plannings, formation et décisions.'],['Amélioration continue','Amélioration des méthodes : procédures, simplification, analyse des problèmes récurrents, conception fonctionnelle d’automatisations et d’IA.'],['Projets IT & développements','Développements techniques, automatisations, outils, déploiements, grands projets, reporting IT et pilotage de la roadmap.']];
+$('definitions').innerHTML=defs.map((d,i)=>`<div class="definition"><strong><i class="dot" style="background:${DATA.colors[i]}"></i> ${esc(d[0])}</strong><p class="small muted" style="margin:5px 0 0">${esc(d[1])}</p></div>`).join('')+'<p class="hint">Règle anti-double comptage : classer le temps selon l’activité effectivement réalisée. Les cinq familles de temps ne sont pas les six familles de missions de la cartographie.</p>';
+
+/* Collaborateurs */
+$('person').innerHTML=names.map(n=>`<option>${esc(n)}</option>`).join('');
+$('person').onchange=renderProfile;
+let full=false;
+$('simple').onclick=()=>{full=false;renderProfile()};
+$('full').onclick=()=>{full=true;renderProfile()};
+function donut(p){let s=0;const parts=p.values.map((v,i)=>{const a=s;s+=v;return v?`${DATA.colors[i]} ${a}% ${s}%`:''}).filter(Boolean);
+  return `<div class="profilechart"><div class="donut" style="background:conic-gradient(${parts.join(',')})" aria-label="Répartition de ${esc(p.name)}"></div><div class="donutlegend">${p.values.map((v,i)=>v?`<div><i class="dot" style="background:${DATA.colors[i]}"></i><span class="small">${esc(DATA.categories[i])}</span><strong>${v}%</strong></div>`:'').join('')}</div></div>`}
+function missionDetail(m){return `<details class="mission"><summary><span><span class="tag">${esc(m.id)}</span> ${esc(m.title)}</span></summary><div class="detail"><b>Famille :</b> ${esc(m.family)}<br><b>Au quotidien :</b> ${esc(m.owners.join(', ')||'—')}<br><b>Renfort :</b> ${esc(m.backup.join(', ')||'—')}<br><b>Automatisation :</b> ${esc(m.automation)}${m.opportunity?'<br><b>Commentaire :</b> '+esc(m.opportunity):''}</div></details>`}
+function renderProfile(){
+  const p=DATA.people.find(x=>x.name===$('person').value)||DATA.people[0];
+  $('simple').classList.toggle('active',!full);$('full').classList.toggle('active',full);
+  const regular=p.regular.map(byId).filter(Boolean),others=p.other.map(byId).filter(Boolean),backups=DATA.missions.filter(m=>m.backup.includes(p.name));
+  let body=`<div style="margin:20px 0 12px"><h2 style="margin-bottom:3px">${esc(p.name)}</h2><div class="muted small">${esc(p.role)}</div></div>${donut(p)}<div class="hint">Répartition du temps estimée par famille d’activité, pas par mission individuelle.</div>`;
+  if(full){
+    body+=`<h3 style="margin-top:24px">Activités régulières (${regular.length})</h3><div class="list">${regular.map(missionDetail).join('')}</div><h3 style="margin-top:24px">Autres responsabilités (${others.length})</h3><div class="list">${others.length?others.map(missionDetail).join(''):'<div class="empty">Aucune autre responsabilité distincte recensée.</div>'}</div><h3 style="margin-top:24px">Missions en renfort (${backups.length})</h3><div class="list">${backups.length?backups.map(missionDetail).join(''):'<div class="empty">Aucune mission en renfort recensée.</div>'}</div>`;
+  }else{
+    body+=`<h3 style="margin-top:24px">Missions principales</h3><div class="list">${regular.slice(0,p.name==='Nouvelle TECH'?4:6).map(m=>`<div class="mission"><span class="tag">${esc(m.id)}</span> ${esc(m.title)}</div>`).join('')}</div><p class="muted small">${regular.length} activités régulières validées${others.length?' · '+others.length+' autres responsabilités':''} · ${backups.length} missions en renfort. Passez en « Vue complète » pour toutes les consulter.</p>`;
+  }
+  $('profile').innerHTML=body;
+}
+
+/* Cartographie des missions : vue liste / vue matrice */
+$('filterperson').innerHTML=opts(names,'Tous les collaborateurs');
+$('aperson').innerHTML=opts(names,'Tous les collaborateurs');
+$('filterfamily').innerHTML=opts(families,'Toutes les familles');
+let matrixMode=false;
+function setView(m){
+  matrixMode=m;
+  $('vlist').classList.toggle('active',!m);$('vmatrix').classList.toggle('active',m);
+  $('listview').hidden=m;$('matrixview').hidden=!m;$('key').hidden=!m;
+  $('mintro').textContent=m?'Chaque mission croisée avec chaque collaborateur. Choisissez un collaborateur pour mettre sa colonne en évidence ; cliquez sur un nom pour ouvrir sa fiche.':'Recherchez une mission, filtrez par collaborateur et famille, puis ouvrez sa fiche détaillée.';
+  renderMissions();
+}
+$('vlist').onclick=()=>setView(false);$('vmatrix').onclick=()=>setView(true);
+function filtered(usePerson){
+  const q=$('search').value.toLowerCase(),person=$('filterperson').value,fam=$('filterfamily').value;
+  return DATA.missions.filter(m=>(!usePerson||!person||m.owners.includes(person)||m.backup.includes(person))&&(!fam||m.family===fam)&&(!q||[m.id,m.title,m.family,m.owners.join(' '),m.backup.join(' '),m.opportunity].join(' ').toLowerCase().includes(q)));
+}
+function renderMissions(){
+  if(matrixMode){renderMatrix();return}
+  const ms=filtered(true);
+  $('missionrows').innerHTML=ms.map(m=>`<tr><td><details><summary style="cursor:pointer"><strong>${esc(m.id)}</strong> — ${esc(m.title)}</summary><div class="small muted" style="margin-top:9px">${esc(m.opportunity||'Aucun commentaire de développement supplémentaire.')}</div></details></td><td>${esc(m.family)}</td><td>${esc(m.owners.join(', ')||'—')}</td><td>${esc(m.backup.join(', ')||'—')}</td><td><span class="tag">${esc(m.automation)}</span></td></tr>`).join('');
+  $('count').textContent=ms.length+' mission(s) affichée(s) sur '+DATA.missions.length;
+}
+function renderMatrix(){
+  const ms=filtered(false),hl=$('filterperson').value,hc=n=>n===hl?'hl':'';
+  const num=id=>parseInt(id,10);
+  let h=`<thead><tr><th class="m">Mission</th>${names.map(n=>`<th class="p ${hc(n)}" data-go="${esc(n)}" title="Ouvrir la fiche">${esc(n)}</th>`).join('')}</tr></thead><tbody>`;
+  families.forEach(f=>{
+    const fm=ms.filter(m=>m.family===f).sort((a,b)=>num(a.id)-num(b.id)||a.id.localeCompare(b.id));
+    if(!fm.length)return;
+    h+=`<tr class="fam"><td class="m" colspan="${names.length+1}">${esc(f)} (${fm.length})</td></tr>`;
+    fm.forEach(m=>{h+=`<tr><td class="m"><span class="tag">${esc(m.id)}</span> ${esc(m.title)}</td>${names.map(n=>{const k=m.owners.includes(n)?'q':m.backup.includes(n)?'r':'';return `<td class="${hc(n)}">${k?`<i class="cell ${k}" title="${k==='q'?'Au quotidien':'En renfort'}"></i>`:''}</td>`}).join('')}</tr>`});
+  });
+  h+=`</tbody><tfoot><tr><td class="m">Au quotidien / en renfort</td>${names.map(n=>`<td class="${hc(n)}">${ms.filter(m=>m.owners.includes(n)).length} / ${ms.filter(m=>m.backup.includes(n)).length}</td>`).join('')}</tr></tfoot>`;
+  $('matrix').innerHTML=ms.length?h:'<tbody><tr><td class="empty">Aucune mission ne correspond à ces filtres.</td></tr></tbody>';
+  document.querySelectorAll('[data-go]').forEach(t=>t.onclick=()=>goPerson(t.dataset.go));
+  $('count').textContent=ms.length+' mission(s) affichée(s) sur '+DATA.missions.length;
+}
+['search','filterperson','filterfamily'].forEach(id=>$(id).addEventListener('input',renderMissions));
+
+/* Améliorations */
+function renderAuto(){
+  const q=$('asearch').value.toLowerCase(),p=$('aperson').value,a=$('apotential').value;
+  const ms=DATA.missions.filter(m=>(m.automation==='Oui, en partie'||m.automation==='À préciser')&&(!p||m.owners.includes(p)||m.backup.includes(p))&&(!a||m.automation===a)&&(!q||[m.id,m.title,m.opportunity].join(' ').toLowerCase().includes(q)));
+  $('opportunities').innerHTML=ms.length?ms.map(m=>`<div class="mission"><div><span class="tag">${esc(m.id)}</span> <strong>${esc(m.title)}</strong></div><p class="small muted">${esc(m.opportunity||'Piste à préciser.')}</p><div class="small"><b>Potentiel :</b> ${esc(m.automation)} · <b>Responsable(s) :</b> ${esc(m.owners.join(', '))}</div></div>`).join(''):'<div class="empty">Aucune piste ne correspond à ces filtres.</div>';
+}
+['asearch','aperson','apotential'].forEach(id=>$(id).addEventListener('input',renderAuto));
+$('itmissions').innerHTML=['37B','45','59'].map(byId).filter(Boolean).map(missionDetail).join('');
+
+
+renderProfile();renderMissions();renderAuto();
+
+
+
+})();
+
+/* Onglets — liens directs : #vision #aujourdhui #transition #demain #detail (+ #vue #equipe #missions #ameliorations #it) */
+const PAGES=['vision','aujourdhui','transition','demain','detail'];
+const SUBS=['vue','equipe','missions','ameliorations','it'];
+let curSub='vue';
+function page(id){
+  if(SUBS.includes(id)){curSub=id;id='detail'}
+  if(!PAGES.includes(id))id='vision';
+  document.querySelectorAll('.section').forEach(x=>x.classList.toggle('active',x.id===id));
+  document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
+  document.querySelectorAll('.subsection').forEach(x=>x.classList.toggle('active',x.id===curSub));
+  document.querySelectorAll('#subnav button').forEach(x=>x.classList.toggle('active',x.dataset.sub===curSub));
+  try{history.replaceState(null,'','#'+(id==='detail'?curSub:id))}catch(e){}
+}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>page(b.dataset.page));
+document.querySelectorAll('#subnav button').forEach(b=>b.onclick=()=>page(b.dataset.sub));
+page((location.hash||'').slice(1));
+window.addEventListener('hashchange',()=>page(location.hash.slice(1)));
+</script>
+</body>
+</html>
